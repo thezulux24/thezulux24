@@ -49,6 +49,10 @@ def streaks(days):
     return current, longest
 
 
+def days_label(n):
+    return f"{n} day" if n == 1 else f"{n} days"
+
+
 def font_face(name):
     b64 = base64.b64encode((FONTS / f"{name}.woff").read_bytes()).decode()
     return f"@font-face{{font-family:'bz-{name}';src:url(data:font/woff;base64,{b64}) format('woff');}}"
@@ -103,7 +107,7 @@ def render(cal):
         + "@keyframes ping{0%{transform:scale(.6);opacity:.9}80%,100%{transform:scale(2.2);opacity:0}}"
         + "@media (prefers-reduced-motion:reduce){.ring{animation:none;opacity:0}}"
     )
-    label = f"{total:,} contributions in the last year. Longest streak {longest} days, current streak {current} days."
+    label = f"{total:,} contributions in the last year. Longest streak {days_label(longest)}, current streak {days_label(current)}."
     return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" role="img" aria-label="{label}">
 <title>{label}</title><style>{css}</style>
 <defs><linearGradient id="foil" x1="{X0}" y1="0" x2="{W - X0}" y2="0" gradientUnits="userSpaceOnUse">
@@ -113,8 +117,8 @@ def render(cal):
 <path d="{chamfer(W, H, 22)}" fill="none" stroke="{LINE}"/>
 <text x="{X0 - 8}" y="96" font-family="bz-display" font-size="64" fill="{TEXT}">{total:,}</text>
 <text x="{X0 - 6}" y="128" font-family="bz-sans" font-size="20" fill="{TEXT2}">contributions in the last year</text>
-<text x="{W - X0 + 8}" y="72" font-family="bz-mono" font-size="15" fill="{TEXT3}" text-anchor="end" letter-spacing="1.5">LONGEST STREAK <tspan fill="{TEXT}">{longest} DAYS</tspan></text>
-<text x="{W - X0 + 8}" y="100" font-family="bz-mono" font-size="15" fill="{TEXT3}" text-anchor="end" letter-spacing="1.5">CURRENT STREAK <tspan fill="{CYAN}">{current} DAYS</tspan></text>
+<text x="{W - X0 + 8}" y="72" font-family="bz-mono" font-size="15" fill="{TEXT3}" text-anchor="end" letter-spacing="1.5">LONGEST STREAK <tspan fill="{TEXT}">{days_label(longest).upper()}</tspan></text>
+<text x="{W - X0 + 8}" y="100" font-family="bz-mono" font-size="15" fill="{TEXT3}" text-anchor="end" letter-spacing="1.5">CURRENT STREAK <tspan fill="{CYAN}">{days_label(current).upper()}</tspan></text>
 {''.join(dots)}
 <circle class="ring" cx="{tx:.1f}" cy="{ty:.1f}" r="9" fill="none" stroke="{CYAN}" stroke-width="1.5"/>
 {''.join(months)}
